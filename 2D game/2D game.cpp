@@ -23,8 +23,13 @@ int main()
     BallSettings ball;
     MathUtils math;
     RenderUtils circle;
-
     RenderUtils blocks[2] = { block1, block2 };
+
+    Image img;
+    Texture texture;
+    Sprite sprite;
+
+
 
     backgrond.setFillColor(Color(15, 15, 15));
     backgrond.setPosition(0, 0);
@@ -45,9 +50,15 @@ int main()
 
     blocks[1].sX = 400;
     blocks[1].sY = 400;
-    blocks[1].eX = 500;
-    blocks[1].eY = 500;
+    blocks[1].eX = 600;
+    blocks[1].eY = 600;
     fs /= 1000;
+
+
+
+    img.loadFromFile("texture/wall.png");
+    texture.loadFromImage(img);
+    sprite.setTexture(texture);
 
     
     while (window.isOpen())
@@ -62,7 +73,7 @@ int main()
         }
         
         Vector2i mousecords = Mouse::getPosition(window);
-        
+
         if (math.MouseClickedLeft(event))
         {
             int numb = 0;
@@ -83,10 +94,15 @@ int main()
             {
                 float pXs = blocks[numb].sX, pYs = blocks[numb].sY;
                 float pXe = blocks[numb].eX, pYe = blocks[numb].eY;
-                blocks[numb].sX = mousecords.x; blocks[numb].sY = mousecords.y;
-                blocks[numb].eX = blocks[numb].sX + (pXe - pXs); blocks[numb].eY = blocks[numb].sY + (pYe - pYs);
+                blocks[numb].sX = mousecords.x; 
+                blocks[numb].sY = mousecords.y;
+                blocks[numb].eX = blocks[numb].sX + (pXe - pXs); 
+                blocks[numb].eY = blocks[numb].sY + (pYe - pYs);
             }
         }
+         
+        sprite.setPosition(blocks[1].sX, blocks[1].sY);
+        sprite.setScale((blocks[1].eX - blocks[1].sX)/275, (blocks[1].eY - blocks[1].sY)/183);
 
         window.clear();
 
@@ -94,6 +110,7 @@ int main()
         window.draw(blocks[0].drawRoundedRect(blocks[0].sX, blocks[0].sY, blocks[0].eX - blocks[0].sX, blocks[0].eY - blocks[0].sY, 0, Color(255, 255, 0)));
         window.draw(blocks[1].drawRoundedRect(blocks[1].sX, blocks[1].sY, blocks[1].eX - blocks[1].sX, blocks[1].eY - blocks[1].sY, 0, Color(255, 0, 0)));
         window.draw(circle.drawCircle(ball.x, ball.y, 10, Color(255, 255, 255), Color(255, 0, 0)));
+        window.draw(sprite);
         
         window.display();
 
@@ -166,7 +183,8 @@ int main()
         float xdif = 3;
         if (!math.LeftCkeckBox(ball, blocks[0])) { ball.x += 1; blocks[0].sX -= xdif; blocks[0].eX -= xdif; }
         if (!math.RightCkeckBox(ball, blocks[0])) { ball.x -= 1; blocks[0].sX += xdif; blocks[0].eX += xdif; }
-
+        if (!math.DownCkeckBox(ball, blocks[1])) ball.y -= 2;
+        if (!math.UpCkeckBox(ball, blocks[1], 2)) ball.y += 2;
 
         if (!math.LeftCkeckBox(ball, blocks[1])) ball.x += ball.speed;
         else if (!math.RightCkeckBox(ball, blocks[1])) ball.x -= ball.speed;

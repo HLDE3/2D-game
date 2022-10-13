@@ -133,10 +133,9 @@ class MathUtils
 
     bool MouseClickedLeft(Event ev)
     {
-        if (ev.type == Event::MouseButtonPressed) {
+        if (ev.type == Event::MouseButtonPressed)
             if (ev.key.code == Mouse::Left)
                 tr = true;
-        }
 
         if (ev.type == Event::MouseButtonReleased)
             if (ev.key.code == Mouse::Left)
